@@ -1,0 +1,64 @@
+import itertools
+
+def gaussian_elimination(A, B):
+    m, n = len(A), len(A[0])
+    
+    for i in range(min(m, n)):
+        # 寻找第 i 列绝对值最大的行
+        max_row = i
+        for j in range(i + 1, m):
+            if abs(A[j][i]) > abs(A[max_row][i]):
+                max_row = j
+        
+        # 交换行
+        A[i], A[max_row] = A[max_row], A[i]
+        B[i], B[max_row] = B[max_row], B[i]
+
+        # 消除第 i 列下方的元素
+        for j in range(i + 1, m):
+            factor = A[j][i] / A[i][i]
+            for k in range(i, n):
+                A[j][k] -= factor * A[i][k]
+            B[j] -= factor * B[i]
+
+    X = [0] * n
+    for i in range(min(m, n) - 1, -1, -1):
+        X[i] = (B[i] - sum(A[i][j] * X[j] for j in range(i + 1, n))) / A[i][i]
+
+    return X
+
+def solution(n, sums):
+    m = n * (n - 1) // 2
+    
+    for perm in itertools.permutations(sums):
+
+        A = [[0] * n for _ in range(m)]
+        B = list(perm)
+        
+        combinations = list(itertools.combinations(range(n), 2))
+        
+        for i, combo in enumerate(combinations):
+            A[i][combo[0]] = 1
+            A[i][combo[1]] = 1
+
+        X = gaussian_elimination(A, B)
+        X.sort()
+
+        # 验证解是否为整数
+        if all(x.is_integer() for x in X):
+            # 验证解中的整数两两相加是否恰好等于 sums 中的元素
+            expected_sums = set([int(X[i]) + int(X[j]) for i in range(n) for j in range(i + 1, n)])
+            actual_sums = set(sums)
+            
+            if expected_sums == actual_sums:
+                return ' '.join(str(int(x)) for x in X)
+
+    return "Impossible"
+
+if __name__ == "__main__":
+    #  You can add more test cases here
+    print(solution(3, [1269, 1160, 1663]) == "383 777 886")
+    print(solution(3, [1, 1, 1]) == "Impossible")
+    print(solution(5, [226, 223, 225, 224, 227, 229, 228, 226, 225, 227]) == "111 112 113 114 115")
+    print(solution(5, [-1, 0, -1, -2, 1, 0, -1, 1, 0, -1]) == "-1 -1 0 0 1")
+    print(solution(5, [79950, 79936, 79942, 79962, 79954, 79972, 79960, 79968, 79924, 79932]) == "39953 39971 39979 39983 39989")
