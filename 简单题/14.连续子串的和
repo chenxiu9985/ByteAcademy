@@ -1,0 +1,17 @@
+def solution(n, b, sequence):
+    subarrays = []
+    res = p = 0
+    
+    for start in range(n):
+        for end in range(start + 1, n + 1):
+            subarrays.append(sequence[start:end])
+            if sum(subarrays[p]) % 3 == 0: 
+                res += 1
+            p += 1
+
+    return res
+
+if __name__ == "__main__":
+    #  You can add more test cases here
+    sequence = [1, 2, 3]
+    print(solution(3, 3, sequence) == 3)
