@@ -1,0 +1,33 @@
+def solution(plates):
+    """
+    我的思路：内外循环，外循环来遍历数组，内循环查找是否存在不间断递增序列
+    """
+    result = []
+    nums = [int(num) for num in plates.split()]
+    p = q = 0
+    
+    while q < len(nums):
+        # 寻找连续递增的序列
+        while q + 1 < len(nums) and nums[q] + 1 == nums[q + 1]:
+            q += 1
+        
+        # 检查是否形成了一个长度至少为3的连续序列
+        if q - p >= 2:
+            # 添加连续序列
+            result.append(f"{nums[p]}-{nums[q]}")
+        else:
+            # 如果长度不足3，则单独列出每个元素
+            for i in range(p, q + 1):
+                result.append(f"{nums[i]}")
+        
+        # 更新索引
+        p = q + 1
+        q = p
+                
+    return ','.join(result)
+
+if __name__ == "__main__":
+    #  You can add more test cases here
+    print(solution("-3 -2 -1 2 10 15 16 18 19 20") == "-3--1,2,10,15,16,18-20" )
+    print(solution("-6 -3 -2 -1 0 1 3 4 5 7 8 9 10 11 14 15 17 18 19 20") == "-6,-3-1,3-5,7-11,14,15,17-20")
+    print(solution("1 2 7 8 9 10 11 19") == "1,2,7-11,19")
