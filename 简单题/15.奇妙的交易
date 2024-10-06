@@ -1,0 +1,42 @@
+def solution(V, W):
+    """
+    我的思路：发现当V大于W的时候特别好做，而W>V的时候，我想要他变成V>W，不断削减W即可
+    """
+    # 数据检查
+    if V >= 2147483648 or W >= 2147483648:
+        return "NO"
+
+    # 分类来讨论
+    if (V - W > 0):
+        return V_more_W(V, W)
+        
+    elif V - W  < 0:
+        # 可交易的货币
+        currency = [pow(V, i) for i in range(0,100) if pow(V, i) <= W ]
+        currency.reverse()
+        p = 0
+        while W - 2 * currency[p] > 0:
+            W -= 2 * currency[p]
+            p += 1
+        while W - currency[p] > 0:
+            W -= currency[p]
+            p += 1
+        return V_more_W(V, W)
+        
+    else:
+        return "Yes"
+
+def V_more_W(V, W):
+    tmp = V - W
+    for i in range(2):
+            tmp -= 1
+            if tmp == 0 :
+                return "Yes"
+    return "NO"
+    
+
+if __name__ == "__main__":
+    # Add your test cases here
+    print(solution(10, 9) == "Yes")
+    print(solution(200, 80199) == "Yes")
+    print(solution(108, 50) == "NO")
