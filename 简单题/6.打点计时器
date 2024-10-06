@@ -1,0 +1,22 @@
+def solution(inputArray):
+    """
+    我的思路是：先遍历一遍取出一元数组，然后构造temp数组，来将一元数组的要打印的点记录下来，
+    再遍历一遍，检查memo里面时候含有temp数组的点，没有的就往里面添加，返回memo的长度。
+    """
+    memo = []
+
+    for i in inputArray:
+        temp = [j for j in range(i[0], i[1])]
+        for t in temp:
+            if t not in memo:
+                memo.append(t)
+
+    return len(memo)
+
+if __name__ == "__main__":
+    #  You can add more test cases here
+    testArray1 = [[1,4], [7, 10], [3, 5]]
+    testArray2 = [[1,2], [6, 10], [11, 15]]
+
+    print(solution(testArray1) == 7 )
+    print(solution(testArray2) == 9 )
