@@ -1,0 +1,27 @@
+def solution(n):
+    """
+    动态规划的理解：dp[i][j]表示有i门课做对j道题的方案数量（不采用分数来算），i=0,1,2,3,...,n+3, j=0,1,2,...,120
+    状态转移：dp[i][j] += dp[i-1][j-score]。我们该如何得到方案数量呢？就是得出所有的情况，for score in range(21)这里是一门的情况，
+    现在是i门，遍历一门，剩下就是i-1门，就是上面的方程dp[i][j] += dp[i-1][j-score]。
+    """
+    max_score = 20 * (n + 3)
+    dp = [[0] * (max_score + 1) for _ in range(n + 4)]
+    dp[0][0] = 1
+    
+    for i in range(1, n + 4):
+        for j in range(max_score + 1):
+            for score in range(21):  
+                if j >= score:
+                    dp[i][j] = (dp[i][j] + dp[i - 1][j - score])
+    
+    total_ways = sum(dp[n+3][j] for j in range(12 * (n+3), max_score + 1)) % 202220222022
+    #print(total_ways)
+    return str(total_ways) 
+
+if __name__ == "__main__":
+    #  You can add more test cases here
+    print(solution(3) == "19195617" )
+    print(solution(6) == "135464411082" )
+    print(solution(49) == "174899025576" )
+    print(solution(201) == "34269227409" )
+    print(solution(888) == "194187156114" )
