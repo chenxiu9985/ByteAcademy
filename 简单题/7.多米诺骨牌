@@ -1,0 +1,47 @@
+def solution(n, data):
+    """
+    我的思路是每隔1s更新一次data，知道data不再改变为止，再去记录.的数量和位置
+    """
+    changed = True
+    while changed:
+        changed = False
+        new_data = list(data)
+        
+        # 检查.是否会向左倒
+        for i in range(n - 1):
+            # 边界的.
+            if i == 0 and data[i] == '.' and data[i + 1] == 'L':
+                new_data[i] = 'L'
+                changed = True
+            elif data[i] == '.' and data[i + 1] == 'L' and data[i - 1] != 'R':
+                new_data[i] = 'L'
+                changed = True
+        
+         # 检查.是否会向右倒
+        for i in reversed(range(1, n)):
+            # 边界的.
+            if i == n-1 and data[i] == '.' and data[i - 1] == 'R':
+                new_data[i] = 'R'
+                changed = True
+            elif data[i] == '.' and data[i - 1] == 'R' and data[i + 1] != 'L':
+                new_data[i] = 'R'
+                changed = True
+
+        data = ''.join(new_data)
+        #print(data)
+    
+    # 计算保持直立的骨牌数量和位置
+    standing_tiles = [i + 1 for i, char in enumerate(data) if char == '.']
+    
+    result = len(standing_tiles)
+
+    if result != 0:
+        return f"{result}:{','.join(map(str, standing_tiles))}"
+    else:
+        return str(result)
+
+if __name__ == "__main__":
+    #  You can add more test cases here
+    print(solution(14, ".L.R...LR..L..") == "4:3,6,13,14" )
+    print(solution(5, "R....") == "0" )
+    print(solution(1, ".") == "1:1" )
