@@ -1,0 +1,28 @@
+def solution(n, data):
+    if data == "0" * n or data == "1" * n:
+        return [-1, -1]
+
+    day = 1
+    while True:
+        new_data = ""
+        for i in range(n):
+            prev = data[(i - 1 + n) % n]
+            next = data[(i + 1) % n]
+            if prev == data[i] == next:
+                new_data += str((int(data[i]) + 1) % 2)
+            else:
+                new_data += data[i]
+
+        if new_data == data:
+            break
+        else:
+            day += 1
+            data = new_data
+
+    return [day, n]
+
+
+if __name__ == "__main__":
+    # Add your test cases here
+    print(solution(4, "0000") == [-1, -1])
+    print(solution(4, "1110") == [2, 4])
