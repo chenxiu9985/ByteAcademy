@@ -1,0 +1,21 @@
+def solution(cases):
+    n = cases[0][0]
+    m = cases[0][1]
+    k = cases[0][2]
+    a = cases[1]
+    b = cases[2]
+
+    res = [[0 for _ in range(m)] for _ in range(n)]
+
+    for i in range(n):
+        for j in range(m):
+            res[i][j] = abs((a[i]-b[j]) ** 2 - k ** 2)
+
+    return min(res)[0]
+
+if __name__ == "__main__":
+    #  You can add more test cases here
+    case1 = [[5, 5, 1], [5, 3, 4, 1, 2], [0, 6, 7, 9, 8]]
+    case2 = [[5, 5, 0], [5, 3, 4, 1, 2], [0, 6, 7, 9, 8]]
+    print(solution(case1) == 0)
+    print(solution(case2) == 1)
