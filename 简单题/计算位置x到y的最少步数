@@ -1,0 +1,42 @@
+def solution(x_position, y_position):
+    """
+    我的思路是：(1 + 2 + 3 + ...) * 2 一直添加，看是否超过des的值，小于就继续加
+    等于就停止，大于的话说明步数夹在 (1+2+..+n-1)*2 和 (1+2+...+n)*2之间，
+    再判断des是否大于上面两个数的中间值，小于等于就取差，大于就 n + des - 中间值
+    """
+
+    des = abs(y_position - x_position)
+    i = 1
+    sum = 1
+    res = [1,1]
+
+    # 检查距离是否有用
+    if des < 2 :
+        return -1
+
+    while(True):
+        i += 1
+        sum = i * (i + 1) // 2
+        # sum * 2 小于des，继续循环，增加步数
+        if(sum * 2 < des):
+            res.extend([i, i])
+        # sum * 2 恰好等于des 结束循环
+        elif sum * 2 == des:
+            res.extend([i, i])
+            break
+        else:
+            if des <= (sum * 2 - i):
+                res.append(des - (sum - i) * 2)
+                break
+            else:
+                res.extend([sum - i, des - (sum * 2 - i)])
+                break
+
+    #print(res)
+    return len(res)
+
+if __name__ == "__main__":
+    #  You can add more test cases here
+    print(solution(12, 6) == 4 )
+    print(solution(34, 45) == 6)
+    print(solution(50, 30) == 8)
