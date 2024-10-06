@@ -1,0 +1,35 @@
+def solution(dna1, dna2, memo = None):
+    """
+    我的思路：这题萌新的噩梦，想破脑袋也想不出来，有动态规划这种算法，
+    这题一步步来把，备忘录+递归还是好理解的，然后根据那个来写动态规划
+    """
+    m, n = len(dna1), len(dna2)
+    
+    # 初始化二维数组 dp
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    
+    # 初始化第一行和第一列
+    for i in range(m + 1):
+        dp[i][0] = i  # 将 dna1 的前 i 个字符转换成空字符串需要删除 i 个字符
+    for j in range(n + 1):
+        dp[0][j] = j  # 将空字符串转换成 dna2 的前 j 个字符需要插入 j 个字符
+    
+    # 动态规划填充 dp 数组
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if dna1[i-1] == dna2[j-1]:
+                dp[i][j] = dp[i-1][j-1]
+            else:
+                dp[i][j] = min(
+                    dp[i-1][j-1] + 1,  # 替换
+                    dp[i][j-1] + 1,    # 插入
+                    dp[i-1][j] + 1     # 删除
+                )
+    
+    return dp[m][n]
+
+
+if __name__ == "__main__":
+    #  You can add more test cases here
+    print(solution("AGCTTAGC", "AGCTAGCT") == 2 )
+    print(solution("AGCCGAGC", "GCTAGCT") == 4)
