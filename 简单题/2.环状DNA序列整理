@@ -1,0 +1,18 @@
+def solution(dna_sequence):
+    if not dna_sequence:  # 处理空字符串的情况
+        return ""
+    
+    dnas = []
+    # 得到所有的dna序列的旋转版本
+    for i in range(len(dna_sequence)):
+        rotated_dna = dna_sequence[i:] + dna_sequence[:i]
+        dnas.append(rotated_dna)
+    
+    # 寻找DNA最小表示
+    return min(dnas)
+
+if __name__ == "__main__":
+    #  You can add more test cases here
+    print(solution("ATCA") == "AATC")
+    print(solution("CGAGTC") == "AGTCCG")
+    print(solution("TCATGGAGTGCTCCTGGAGGCTGAGTCCATCTCCAGTAG") == "AGGCTGAGTCCATCTCCAGTAGTCATGGAGTGCTCCTGG")
