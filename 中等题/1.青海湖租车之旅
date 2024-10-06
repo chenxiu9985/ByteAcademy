@@ -1,0 +1,69 @@
+def solution(distance, n, gas_stations):
+    # 检查是否包含加油站
+    if n == 0:
+        return "Impossible"
+
+    # 检查数据是否合法
+    for item in gas_stations:
+        if len(item) != 2 or not (1 <= item[0] <= 10000 and 0 <= item[1] <= 2000):
+            return "Impossible"
+
+    # 对加油站进行筛选并排序
+    gas_stations = sorted([(distance - a, b) for station in gas_stations for a, b in [station] if 1 <= a <= distance and 0 <= b <= 2000])
+    #print(gas_stations)
+
+    current_fuel = 200
+    current_station_fee = 0
+    current_pos = 0
+    total_cost = 0
+
+    while current_pos < distance:
+        # 寻找可行驶范围内最便宜的加油站
+        next_station = find_station(current_pos, current_fuel, gas_stations)
+
+        # 结束条件
+        if next_station is None or (distance - current_pos <= 200 and (current_station_fee == 0 or current_station_fee < next_station[1])):
+            fuel_needed = distance - current_pos + 200
+            total_cost += current_station_fee * fuel_needed
+            break
+
+        # 选择价格最低的加油站
+        station_pos, current_station_fee = next_station[0], next_station[1]
+        current_fuel -= station_pos
+        current_pos = station_pos
+
+        # 加满油尝试下一个更便宜的加油站
+        next_next_station = find_station(current_pos, 400, gas_stations)
+        if next_next_station is not None:
+            fuel_needed = next_next_station[0] - current_pos
+            current_fuel += fuel_needed
+            current_pos = next_next_station[0]
+            total_cost += current_station_fee * fuel_needed
+            current_station_fee = next_next_station[1]
+
+    #print(total_cost)
+    return total_cost
+
+def find_station(current_pos, current_fuel, gas_stations):
+    valid_stations = []
+    for station in gas_stations:
+        if station[0] > current_pos and station[0] <= current_pos + current_fuel:
+            valid_stations.append(station)
+    if not valid_stations:
+        return None
+    cheapest_station = min(valid_stations, key=lambda x: x[1])
+    return cheapest_station
+
+
+if __name__ == "__main__":
+    #  You can add more test cases here
+    gas_stations1 = [(100, 1), (200, 30), (400, 40), (300, 20)]
+    gas_stations2 = [(100, 999), (150, 888), (200, 777), (300, 999), (400, 1009), (450, 1019), (500, 1399)]
+    gas_stations3 = [(101,), (100, 100), (102, 1)]
+    gas_stations4 = [(34, 1), (105, 9), (9, 10), (134, 66), (215, 90), (999, 1999), (49, 0), (10, 1999), (200, 2), (300, 500), (12, 34), (1, 23), (46, 20), (80, 12), (1, 1999), (90, 33), (101, 23), (34, 88), (103, 0), (1, 1)]
+
+    print(solution(500, 4, gas_stations1) == 4300)
+    print(solution(500, 7, gas_stations2) == 410700)
+    print(solution(500, 3, gas_stations3) == "Impossible")
+    print(solution(100, 20, gas_stations4) == 0)
+    print(solution(100, 0, []) == "Impossible")
