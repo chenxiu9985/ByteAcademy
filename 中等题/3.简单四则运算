@@ -1,0 +1,77 @@
+def solution(s):
+    """
+    力扣772
+    """
+    def stackHigher(c, peek):
+            if c in '*/' and peek in '+-':
+                return False
+            return True
+ 
+    opStack = []
+    numStack = [] 
+    i = 0
+    n = len(s)
+    while i < n:
+        if s[i] == '(':
+            opStack.append(s[i])
+        elif s[i] == ')':
+            while opStack and opStack[-1] != '(':
+                op = opStack.pop()
+                num2 = numStack.pop()
+                num1 = numStack.pop()
+                match op:
+                    case '+':
+                        numStack.append(num1 + num2)
+                    case '-':
+                        numStack.append(num1 - num2)
+                    case '*':
+                        numStack.append(num1 * num2)
+                    case '/':
+                        numStack.append(int(num1 / num2))
+            opStack.pop()
+        elif s[i].isdigit():
+            num = 0
+            while i < n and s[i].isdigit():
+                num = num * 10 + int(s[i])
+                i += 1
+            i -= 1
+            numStack.append(num)
+        else:
+            while opStack and opStack[-1] != '(' and stackHigher(s[i], opStack[-1]):
+                op = opStack.pop()
+                num2 = numStack.pop()
+                num1 = numStack.pop()
+                match op:
+                    case '+':
+                        numStack.append(num1 + num2)
+                    case '-':
+                        numStack.append(num1 - num2)
+                    case '*':
+                        numStack.append(num1 * num2)
+                    case '/':
+                        numStack.append(int(num1 / num2))
+            opStack.append(s[i])
+        i += 1
+
+    while opStack:
+        op = opStack.pop()
+        num2 = numStack.pop()
+        num1 = numStack.pop()
+        match op:
+            case '+':
+                numStack.append(num1 + num2)
+            case '-':
+                numStack.append(num1 - num2)
+            case '*':
+                numStack.append(num1 * num2)
+            case '/':
+                numStack.append(int(num1 / num2))
+    
+    return numStack[-1]
+
+if __name__ == "__main__":
+    #  You can add more test cases here
+    print(solution("1+1") == 2)
+    print(solution("3+4*5/(3+2)") == 7)
+    print(solution("4+2*5-2/1") == 12)
+    print(solution("(1+(4+5+2)-3)+(6+8)") == 23)
