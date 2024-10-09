@@ -1,0 +1,21 @@
+def solution(A):
+    """
+    我的思路：抽象成数学问题，构造一个数组arr[0,1]，其中arr[0]表示能生育兔子的数量
+    ，arr[1]表示未能生育兔子的数量。刚开始能生育的为0，未能生育的为1，然后第一个变成[1,0]
+    第二个月是[1,1],下面是[2,1],[3,2],...规律为arr[0] = arr[0] + arr[1], arr[1] = arr[0]
+    """
+    arr = [0, 1]
+    for _ in range(A):
+        x = arr[0]
+        arr[0] += arr[1]
+        arr[1] = x
+        
+    return sum(arr)
+
+
+if __name__ == "__main__":
+    # Add your test cases here
+    print(solution(5) == 8)
+    print(solution(1) == 1)
+    print(solution(15) == 987)
+    print(solution(50) == 20365011074)
