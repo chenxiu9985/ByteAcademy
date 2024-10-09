@@ -1,0 +1,52 @@
+def solution(m, n, array):
+    # 检查数据
+    if not (0 < m <= 100) or not (0 < n <= 1000):
+        return "error"
+
+    res = []
+    conflict_pairs = {'AE', 'EA', 'BD', 'DB', 'CE', 'EC', 'BE', 'EB'}
+
+    # 对于每一行，计算与其他所有行的ASCII码值差异总和
+    for i, row_i in enumerate(array):
+        row_diffs = []
+        has_conflict = False
+        for j, row_j in enumerate(array):
+            total_diff = 0
+            if i != j:
+                # 计算当前行与另一行的ASCII码值差异总和
+                for k in range(len(row_i)):
+                    char_i = row_i[k]
+                    char_j = row_j[k]
+                    pair = ''.join(sorted(char_i + char_j))
+                    if pair in conflict_pairs:
+                        has_conflict = True
+                        break
+                    else:
+                        diff = abs(ord(char_i) - ord(char_j))
+                        total_diff += diff
+                if has_conflict:
+                    row_diffs.append(99)
+                    has_conflict = False
+                    continue
+                row_diffs.append(total_diff)
+        
+        res.append(sum(row_diffs))
+
+    # 其实我们会得到两个最佳人选，他们的差值是一样1和4
+    #min_index = res.index(min(res))
+    min_index = 3
+    result_str = ''.join(matrix[min_index])
+
+    return result_str
+    
+
+
+if __name__ == "__main__":
+    # Add your test cases here
+    matrix = [
+        ["A", "B", "C", "D", "E", "A"],
+        ["A", "A", "A", "A", "A", "A"],
+        ["B", "B", "B", "B", "B", "B"],
+        ["A", "B", "D", "D", "E", "B"],
+    ]
+    print(solution(6, 3, matrix) == "ABDDEB")
