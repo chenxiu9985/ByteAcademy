@@ -1,0 +1,19 @@
+def solution(x, y):
+    arr = []
+    for num in range(x, y+1):
+        str_num = str(num)
+        if len(str_num) == 1:
+            arr.append(str_num)
+        else:
+            first_digit = str_num[0]
+            if all(digit == first_digit for digit in str_num):
+                arr.append(str_num)
+
+    return len(arr)
+
+
+if __name__ == "__main__":
+    # Add your test cases here
+
+    print(solution(1, 10) == 9)
+    print(solution(2, 22) == 10)
